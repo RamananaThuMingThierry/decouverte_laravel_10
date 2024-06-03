@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
 use App\Models\Categories;
+use App\Models\Option;
 use App\Models\Posts;
 use Illuminate\Http\Request;
 use View;
@@ -25,6 +26,7 @@ class PostsController extends Controller
         $post = Posts::create($request->validated());
         $slug = $post->slug;
         $id = $post->id;
+      
         return redirect()->route('post.show', compact('slug', 'id'))->with('success', 'L\'article a été bien sauvegarder');
     }
 

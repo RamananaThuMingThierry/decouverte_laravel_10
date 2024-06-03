@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\OptionRequest;
+use App\Models\Option;
 use Illuminate\Http\Request;
 
 class OptionController extends Controller
@@ -14,7 +16,9 @@ class OptionController extends Controller
      */
     public function index()
     {
-        //
+        return View('admin.options.index', [
+            'options' => Option::paginate(10)
+        ]);
     }
 
     /**
@@ -24,7 +28,10 @@ class OptionController extends Controller
      */
     public function create()
     {
-        //
+        $option = new Option();
+        return View('admin.options.form', [
+            'option' => $option
+        ]);
     }
 
     /**
@@ -33,20 +40,10 @@ class OptionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(OptionRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $options = Option::create($request->validated());
+        return Redirect()->route('admin.option.index')->with('success','L\'option a été créé');
     }
 
     /**
@@ -55,9 +52,11 @@ class OptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Option $option)
     {
-        //
+        return View('admin.options.form', [
+            'option' => $option
+        ]);
     }
 
     /**
@@ -67,9 +66,14 @@ class OptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(OptionRequest $request, Option $option)
     {
-        //
+        if($option->exists){
+            $option->update($request->validated());
+            return redirect()->route('admin.option.index')->with('success', 'L\'option a été modifié');
+        }else{
+            return redirect()->route('admin.option.index')->with('warning', 'L\'option n\'existe pas dans la base de données!');
+        }
     }
 
     /**
@@ -78,8 +82,13 @@ class OptionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Option $option)
     {
-        //
+        if($option->exists){
+            $option->delete();
+            return redirect()->route('admin.option.index')->with('success', 'L\'option a été supprimé');
+        }else{
+            return redirect()->route('admin.option.index')->with('warning', 'L\'option n\'existe pas dans la base de données');
+        }
     }
 }

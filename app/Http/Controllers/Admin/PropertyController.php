@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\PropertyRequest;
+use View;
+use Redirect;
+use App\Models\Option;
 use App\Models\Property;
 use Illuminate\Http\Request;
-use Redirect;
-use View;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\PropertyRequest;
 
 class PropertyController extends Controller
 {
@@ -41,7 +42,8 @@ class PropertyController extends Controller
             'sold' => false
         ]);
         return View('admin.properties.form', [
-            'property' => $property
+            'property' => $property,
+            'options' => Option::pluck('name', 'id')
         ]);
     }
 
@@ -53,7 +55,8 @@ class PropertyController extends Controller
      */
     public function store(PropertyRequest $request)
     {
-        Property::create($request->validated());
+        $property = Property::create($request->validated());
+        $property->options()->sync($request->validated('options'));
         return Redirect()->route('admin.property.index')->with('success', 'Le bien a été créé');
     }
 
@@ -66,7 +69,8 @@ class PropertyController extends Controller
     public function edit(Property $property)
     {
         return View('admin.properties.form', [
-            'property' => $property
+            'property' => $property,
+            'options' => Option::pluck('name', 'id')
         ]);
     }
 
@@ -77,13 +81,15 @@ class PropertyController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    
     public function update(PropertyRequest $request, Property $property)
     {
         if($property->exists){
             $property->update($request->validated());
+            $property->options()->sync($request->validated('options'));
             return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié');
         }else{
-            return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié');
+            return redirect()->route('admin.property.index')->with('warning', 'Le bien n\'existe pas dans la base de données');
         }
     }
 
@@ -99,7 +105,7 @@ class PropertyController extends Controller
             $property->delete();
             return redirect()->route('admin.property.index')->with('success', 'Le bien a été supprimé');
         }else{
-            return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié');
+            return redirect()->route('admin.property.index')->with('warning', 'Le bien n\'existe pas dans la base de données');
         }
     }
 }

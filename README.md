@@ -1,4 +1,4 @@
-# TP Agence Immo
+   # TP Agence Immo
 1. Créer un model Property et la migration
    -> php artisan make:model -m Property
 2. Créer un controller 
