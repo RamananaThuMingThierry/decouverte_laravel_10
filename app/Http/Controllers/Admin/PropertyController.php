@@ -20,7 +20,7 @@ class PropertyController extends Controller
     public function index()
     {
         return View('admin.properties.index', [
-            'properties' => Property::orderBy('created_at', 'desc')->paginate(1)
+            'properties' => Property::orderBy('created_at', 'desc')->paginate(5)
         ]);
     }
 
@@ -55,8 +55,19 @@ class PropertyController extends Controller
      */
     public function store(PropertyRequest $request)
     {
-        $property = Property::create($request->validated());
-        $property->options()->sync($request->validated('options'));
+        // Validation des données de la requête
+        $validatedData = $request->validated();
+
+        // Création de la propriété
+        $property = Property::create($validatedData);
+
+        // Validation et transformation des options en entier
+        $options = array_map('intval', $validatedData['options']);
+
+        // Synchronisation des options avec la propriété
+        $property->options()->sync($options);
+
+        // Redirection avec message de succès
         return Redirect()->route('admin.property.index')->with('success', 'Le bien a été créé');
     }
 
@@ -85,8 +96,19 @@ class PropertyController extends Controller
     public function update(PropertyRequest $request, Property $property)
     {
         if($property->exists){
-            $property->update($request->validated());
-            $property->options()->sync($request->validated('options'));
+
+            // Validation des données de la requête
+            $validatedData = $request->validated();
+
+            // Modifier de la propriété
+            $property->update($validatedData);
+
+            // Validation et transformation des options en entier
+            $options = array_map('intval', $validatedData['options']);
+
+            // Synchronisation des options avec la propriété
+            $property->options()->sync($options);
+            
             return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié');
         }else{
             return redirect()->route('admin.property.index')->with('warning', 'Le bien n\'existe pas dans la base de données');

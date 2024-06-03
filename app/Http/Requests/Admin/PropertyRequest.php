@@ -35,7 +35,8 @@ class PropertyRequest extends FormRequest
             'address' => ['required', 'min:8'],
             'postal_code' => ['required', 'min:3'],
             'sold' => ['required', 'boolean'],
-            'options' => ['array','exists:options,id','required']
+            'options' => 'required|array',
+            'options.*' => 'integer|exists:options,id',
         ];
     }
 }
