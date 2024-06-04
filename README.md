@@ -31,4 +31,6 @@
   https://github.com/mailhog/MailHog/releases
   MailHog_windows_amd64.exe
   http://localhost:8025/
+  php artisan config:cache
+
 

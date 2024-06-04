@@ -15,6 +15,9 @@
 
       <div class="mt-4">
         <h4>Intéressé par ce bien ?</h4>
+
+        @include('shared.flash')
+
         <form action="{{ route('property.contact', ['property' => $property]) }}" method="post" class="vstack gap-3">
           @csrf
           @method('POST')

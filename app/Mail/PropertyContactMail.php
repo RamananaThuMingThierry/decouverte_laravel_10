@@ -34,8 +34,8 @@ class PropertyContactMail extends Mailable
     public function build()
     {
         return $this->from(config('mail.from.address'), config('mail.from.name'))
-                    ->to('ramananathumingthierry@gmail.com')
-                    ->subject('Test')
+                    ->to($this->data['email'])
+                    ->subject('Demande un contact')
                     ->markdown('emails.property.contact')
                     ->with([
                         'property' => $this->property,

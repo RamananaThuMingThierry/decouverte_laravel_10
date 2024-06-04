@@ -1,12 +1,13 @@
 @component('mail::message')
-# Introduction
+# Nouvelle demande de contact
 
-The body of your message.
+Une nouvelle demande de contacte a été fait pour le bien <a href="{{route('property.show', ['slug' => $property->getSlug(), 'property' => $property])}}">{{ $property->title }}</a>
 
-@component('mail::button', ['url' => ''])
-Button Text
-@endcomponent
+- Prénom : {{ $data['firstname'] }}
+- Nom : {{ $data['lastname'] }}
+- Contact : {{ $data['phone'] }}
+- Email : {{ $data['email'] }}
 
-Thanks,<br>
+Merci,<br>
 {{ config('app.name') }}
 @endcomponent
