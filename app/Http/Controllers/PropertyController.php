@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use View;
+use Redirect;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use App\Mail\PropertyContactMail;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\SearchPropertyRequest;
-use Redirect;
+use App\Http\Requests\ContactPropertyRequest;
 
 class PropertyController extends Controller
 {
     public function index(SearchPropertyRequest $request) {
-        $query = Property::query();
+        $query = Property::query()->orderBy('created_at', 'desc');
     
         $validated = $request->validated();
     
@@ -46,7 +49,13 @@ class PropertyController extends Controller
         }
 
         return view('property.show', [
-            'propery' => $property
+            'property' => $property
         ]);
+    }
+
+    public function contact(Property $property, ContactPropertyRequest $request){
+        Mail::send(new PropertyContactMail($property, $request->validated()));
+        dd('Votre demande de contact a bien été envoyé');
+        // return back()->with('success', 'Votre demande de contact a bien été envoyé');
     }
 }

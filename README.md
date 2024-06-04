@@ -25,6 +25,10 @@
     new TomSelect('select[multiple]', {plugins: {remove_button: {title: 'Supprimer'}}})
   </script>
 
+  php artisan make:mail PropertyContactMail --markdown=emails.property.contact
 
-  
+  # Installer mailhog
+  https://github.com/mailhog/MailHog/releases
+  MailHog_windows_amd64.exe
+  http://localhost:8025/
 
