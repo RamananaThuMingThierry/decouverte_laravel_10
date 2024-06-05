@@ -32,5 +32,22 @@
   MailHog_windows_amd64.exe
   http://localhost:8025/
   php artisan config:cache
+  Il faut démarrer le server avant de l'utiliser
+  
+  # Utiliser softDeletes
+  pour que la suppression restent dans la corbeille avant d'être supprimer définitivements
+
+   * N'oublie pas de mettre "use SoftDeletes" dans le model.
+  
+   # Property::recent()->withTrashed()->paginate(5)
+     * withTrashed() : permet de récupér tous les property y compris cel qui a été supprimer.
+
+
+  # Dans la méthode destroy
+   $property->delete() : Il y vas dans la corbeille
+   $property->forceDelete() : Il sera supprimer définitivement
+   $property->restore() : Permet de le restore    
+  php artisan make:migrateion AddDeteletedAtProperties
+ 
 
 

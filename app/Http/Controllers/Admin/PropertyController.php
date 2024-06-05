@@ -22,7 +22,7 @@ class PropertyController extends Controller
     public function index()
     {
         return View('admin.properties.index', [
-            'properties' => Property::orderBy('created_at', 'desc')->paginate(5)
+            'properties' => Property::recent()->withTrashed()->paginate(5)
         ]);
     }
 

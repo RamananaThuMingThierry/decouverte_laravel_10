@@ -26,6 +26,7 @@ class CreatePropertiesTable extends Migration
             $table->string('address');
             $table->string('postal_code');
             $table->boolean('sold');
+            $table->dateTime('deleted_at')->nullable();
             $table->timestamps();
         });
     }
