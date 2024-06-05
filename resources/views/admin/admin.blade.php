@@ -7,6 +7,13 @@
   <title>@yield('titre') | Administration</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css" rel="stylesheet">
+  <style>
+    @layer reset{
+      button{
+        all: unset;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar navbar-expand-lg bg-primary navbar-dark">
@@ -23,6 +30,19 @@
           <li class="nav-item"><a href="{{ route('admin.property.index') }}" @class(['nav-link', 'active' => str_contains($route, 'property.')])>Gérer les biens</a></li>
           <li class="nav-item"><a href="{{ route('admin.option.index') }}" @class(['nav-link', 'active' => str_contains($route, 'option.')])>Gérer les options</a></li>
         </ul>
+        <div class="ms-auto">
+          @auth
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <form action="{{ route('logout') }}" method="post">
+                    @csrf
+                    @method('DELETE'),
+                    <button type="submit" class="nav-link">Se déconnecter</button>
+                  </form>
+                </li>
+              </ul>
+          @endauth
+        </div>
       </div>
     </div>
   </nav>
