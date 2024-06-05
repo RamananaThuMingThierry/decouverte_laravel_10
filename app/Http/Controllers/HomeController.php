@@ -9,7 +9,7 @@ use View;
 class HomeController extends Controller
 {
     public function index(){
-        $properties = Property::orderBy('created_at', 'desc')->limit(4)->get();
+        $properties = Property::with('images')->recent()->available(true)->limit(4)->get();
         return View('home', compact('properties'));
     }
 }

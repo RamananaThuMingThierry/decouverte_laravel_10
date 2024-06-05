@@ -3,44 +3,45 @@
 @section('title', $property->title)
 
 @section('contenu')
-    <div class="container">
-      @if($property->images)
-          @foreach($property->images as $image)
-              <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $property->title }}" style="width:200px;">
-          @endforeach
-      @endif
-      <h1>{{ $property->title }}</h1>
-      <h2>{{ $property->rooms }} pièces - {{ $property->surface }} m²</h2>
-
-      <div class="text-primary fw-bold" style="font-size:4rem">
-        {{ number_format($property->price, thousands_separator: ' ') }} €
-      </div>
-
-      <hr>
-
-      <div class="mt-4">
-        <h4>Intéressé par ce bien ?</h4>
-
-        @include('shared.flash')
-
-        <form action="{{ route('property.contact', ['property' => $property]) }}" method="post" class="vstack gap-3">
-          @csrf
-          @method('POST')
-          <div class="row">
-            @include('shared.input', ['class' => 'col', 'name' => 'firstname', 'label' => 'Prénom', 'valeur' => 'RAMANANA Thu Ming'])
-            @include('shared.input', ['class' => 'col', 'name' => 'lastname', 'label' => 'Nom', 'valeur' => 'Thierry'])
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-7">
+          @include('property.slide')
+        </div>
+        <div class="col-5">
+          <h1>{{ $property->title }}</h1>
+          <h2>{{ $property->rooms }} pièces - {{ $property->surface }} m²</h2>
+  
+          <div class="text-primary fw-bold" style="font-size:4rem">
+            {{ number_format($property->price, thousands_separator: ' ') }} €
           </div>
-          <div class="row">
-            @include('shared.input', ['type' => 'number', 'class' => 'col', 'name' => 'phone', 'label' => 'Téléphone', 'valeur' => '0327563770'])
-            @include('shared.input', ['type' => 'email', 'class' => 'col', 'name' => 'email', 'label' => 'Email', 'valeur' => 'ramananathumingthierry@gmail.com'])
+  
+          <hr>
+  
+          <div class="mt-4">
+            <h4>Intéressé par ce bien ?</h4>
+  
+            @include('shared.flash')
+  
+            <form action="{{ route('property.contact', ['property' => $property]) }}" method="post" class="vstack gap-3">
+              @csrf
+              @method('POST')
+              <div class="row">
+                @include('shared.input', ['class' => 'col', 'name' => 'firstname', 'label' => 'Prénom', 'valeur' => 'RAMANANA Thu Ming'])
+                @include('shared.input', ['class' => 'col', 'name' => 'lastname', 'label' => 'Nom', 'valeur' => 'Thierry'])
+              </div>
+              <div class="row">
+                @include('shared.input', ['type' => 'number', 'class' => 'col', 'name' => 'phone', 'label' => 'Téléphone', 'valeur' => '0327563770'])
+                @include('shared.input', ['type' => 'email', 'class' => 'col', 'name' => 'email', 'label' => 'Email', 'valeur' => 'ramananathumingthierry@gmail.com'])
+              </div>
+              @include('shared.input', ['type' => 'textarea', 'class' => 'col', 'name' => 'message', 'label' => 'Votre message', 'valeur' => 'Mon petit message'])
+              <button type="submit" class="btn btn-primary mt-2">
+                Nous contacter
+              </button>
+            </form>
           </div>
-          @include('shared.input', ['type' => 'textarea', 'class' => 'col', 'name' => 'message', 'label' => 'Votre message', 'valeur' => 'Mon petit message'])
-          <button type="submit" class="btn btn-primary">
-            Nous contacter
-          </button>
-        </form>
+        </div>
       </div>
-
       <div class="mt-4">
         <p>{!! nl2br($property->description) !!}</p>
         <div class="row">

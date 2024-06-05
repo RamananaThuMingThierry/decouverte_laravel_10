@@ -1,4 +1,5 @@
-<div class="card">
+<div class="card" style="width: 18rem;">
+  @include('property.slide')
   <div class="card-body">
     <h5 class="card-title">
       <a href="{{ route('property.show', ['slug' => $property->getSlug(), 'property' => $property]) }}">{{ $property->title }}</a>
@@ -8,3 +9,4 @@
     {{ number_format($property->price, thousands_separator:' ') }}</div>
   </div>
 </div>
+
