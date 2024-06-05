@@ -4,6 +4,11 @@
 
 @section('contenu')
     <div class="container">
+      @if($property->images)
+          @foreach($property->images as $image)
+              <img src="{{ asset('storage/' . $image->image_path) }}" alt="{{ $property->title }}" style="width:200px;">
+          @endforeach
+      @endif
       <h1>{{ $property->title }}</h1>
       <h2>{{ $property->rooms }} pièces - {{ $property->surface }} m²</h2>
 

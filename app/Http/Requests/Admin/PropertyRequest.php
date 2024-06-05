@@ -26,17 +26,22 @@ class PropertyRequest extends FormRequest
         return [
             'title' => ['required', 'min:3'],
             'description' => ['required', 'min:8'],
-            'surface' => ['required','integer', 'min:10'],
-            'rooms' => ['required','integer', 'min:1'],
+            'surface' => ['required', 'integer', 'min:10'],
+            'rooms' => ['required', 'integer', 'min:1'],
             'bedrooms' => ['required', 'integer', 'min:0'],
             'floor' => ['required', 'integer', 'min:0'],
             'price' => ['required', 'integer', 'min:0'],
-            'city' => ['required', 'min:8'],
+            'city' => ['required', 'min:4'],
             'address' => ['required', 'min:8'],
             'postal_code' => ['required', 'min:3'],
             'sold' => ['required', 'boolean'],
-            'options' => 'required|array',
-            'options.*' => 'integer|exists:options,id',
+            'options' => ['required', 'array'],
+            'options.*' => ['integer', 'exists:options,id'],
+            'images' => ['sometimes', 'array'],
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            'delete_images' => ['sometimes', 'array'],
+            'delete_images.*' => ['integer', 'exists:pictures,id']
         ];
-    }
+    }    
+
 }

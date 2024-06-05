@@ -27,7 +27,7 @@ class Property extends Model
         'city',
         'address',
         'postal_code',
-        'sold',
+        'sold'
     ];
 
     public function options(): BelongsToMany{
@@ -36,5 +36,10 @@ class Property extends Model
 
     public function getSlug(){
         return Str::slug($this->title);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Picture::class);
     }
 }

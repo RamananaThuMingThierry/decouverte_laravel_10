@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use View;
 use Redirect;
 use App\Models\Option;
+use App\Models\Picture;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Admin\PropertyRequest;
 
 class PropertyController extends Controller
@@ -33,11 +35,15 @@ class PropertyController extends Controller
     {
         $property = new Property();
         $property->fill([
+            'title' => 'Spark 10 Pro',
+            'description' => 'Mon premier teste',
             'surface' => 40,
             'rooms' => 3,
             'bedrooms' => 1,
-            'floor' => 0,
+            'floor' => 2,
             'city' => 'Antalaha',
+            'address' => 'VT 29 RAI bis Ampahateza',
+            'price' => '100000',
             'postal_code' => 206,
             'sold' => false
         ]);
@@ -57,19 +63,46 @@ class PropertyController extends Controller
     {
         // Validation des données de la requête
         $validatedData = $request->validated();
-
+    
         // Création de la propriété
         $property = Property::create($validatedData);
+    
+        // Assurez-vous que 'options' est un tableau
+        if (isset($validatedData['options']) && is_array($validatedData['options'])) {
+            // Validation et transformation des options en entier
+            $options = array_map('intval', $validatedData['options']);
+    
+            // Synchronisation des options avec la propriété
+            $property->options()->sync($options);
+        } else {
+            // Gérer l'erreur ou les cas où 'options' n'est pas un tableau
+            return Redirect()->back()->withErrors(['options' => 'Les options doivent être un tableau d\'entiers.']);
+        }
 
-        // Validation et transformation des options en entier
-        $options = array_map('intval', $validatedData['options']);
-
-        // Synchronisation des options avec la propriété
-        $property->options()->sync($options);
-
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                if (is_array($image)) {
+                    foreach ($image as $img) {
+                        $path = $img->store('images', 'public');
+                        Picture::create([
+                            'property_id' => $property->id,
+                            'image_path' => $path
+                        ]);
+                    }
+                } else {
+                    $path = $image->store('images', 'public');
+                    Picture::create([
+                        'property_id' => $property->id,
+                        'image_path' => $path
+                    ]);
+                }
+            }
+        }
+    
         // Redirection avec message de succès
         return Redirect()->route('admin.property.index')->with('success', 'Le bien a été créé');
     }
+    
 
     /**
      * Show the form for editing the specified resource.
@@ -108,6 +141,30 @@ class PropertyController extends Controller
 
             // Synchronisation des options avec la propriété
             $property->options()->sync($options);
+
+              // Suppression des images sélectionnées
+            if (isset($validatedData['delete_images'])) {
+                foreach ($validatedData['delete_images'] as $imageId) {
+                    $image = Picture::find($imageId);
+                    if ($image) {
+                        // Supprimer le fichier physique de l'image
+                        Storage::disk('public')->delete($image->image_path);
+                        // Supprimer l'entrée de la base de données
+                        $image->delete();
+                    }
+                }
+            }
+
+            // Ajout des nouvelles images
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('images', 'public');
+                    Picture::create([
+                        'property_id' => $property->id,
+                        'image_path' => $path
+                    ]);
+                }
+            }
             
             return redirect()->route('admin.property.index')->with('success', 'Le bien a été modifié');
         }else{

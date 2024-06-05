@@ -48,6 +48,7 @@ class PropertyController extends Controller
             return Redirect()->route('property.show', ['slug', $expectedSlug, 'property' => $property]);
         }
 
+        $property->load('images');
         return view('property.show', [
             'property' => $property
         ]);
