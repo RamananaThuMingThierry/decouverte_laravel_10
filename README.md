@@ -47,7 +47,9 @@
    $property->delete() : Il y vas dans la corbeille
    $property->forceDelete() : Il sera supprimer définitivement
    $property->restore() : Permet de le restore    
-  php artisan make:migrateion AddDeteletedAtProperties
+   php artisan make:migrateion AddDeteletedAtProperties
  
+   # Utilisations de cast dans le model
+      
 
 
